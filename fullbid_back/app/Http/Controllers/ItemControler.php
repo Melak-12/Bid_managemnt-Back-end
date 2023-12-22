@@ -8,19 +8,35 @@ use Symfony\Component\Console\Input\Input;
 
 class ItemControler extends Controller
 {
-   function addItem(Request $req){
-        $item=new Item();
-        $item->itemTitle = $req->input('itemTitle');
-        $item->itemDisc=$req->input('itemDisc');
-        $item->itemDuration=$req->input('itemDuration');
-        $item->itemImage = $req->file('itemImage')->store('products');
-        error_log("this is item image".''.$item->itemImage);
-        $item->itemStartPrice=$req->input('itemStartPrice');
-        $item->currentWinner=$req->input('currentWinner');
-        $item->save();
-
-        return $item;
+    function addItem(Request $req) {
+        try {
+            $item = new Item();
+            $item->itemTitle = $req->input('itemTitle');
+            $item->itemDisc = $req->input('itemDisc');
+            $item->itemDuration = $req->input('itemDuration');
+            $item->itemStartPrice = $req->input('itemStartPrice');
+            $item->currentWinner = $req->input('currentWinner');
+    
+            error_log("this is item title".' '.$item->itemTitle);
+    
+            error_log("items before save".' '.print_r($item->toArray(), true));
+    
+            $item->save();
+    
+            error_log("items after save".' '.$item);
+            error_log("items on save ".' '.$item->save());
+    
+            return $item;
+        } catch (\Exception $e) {
+            // Log or handle the exception
+            error_log("Exception: " . $e->getMessage()); // Log full exception message
+            // error_log("Trace: " . $e->getTraceAsString()); // Log full stack trace for more details
+            // return response()->json(['error' => 'Failed to save item'], 500);
+        }
+        
+        
     }
+    
     function list(){
         return Item::all();
     }

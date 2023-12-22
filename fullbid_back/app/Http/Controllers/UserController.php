@@ -23,9 +23,14 @@ class UserController extends Controller
         if ($neww){
             return ['error' => 'Email already exist! Please Login '];
         }
+
         $user->password =Hash::make( $req->password);
+        error_log($user);
+
         $user->save();
-      return response()->json(['success'=>$req->name]);
+        error_log('on save',$user->save());
+
+      return response()->json(['successss'=>$req->name]);
         // return response()->$user->name;
 
        }
@@ -33,20 +38,7 @@ class UserController extends Controller
         error_log('error',$e->getMessage());
        }
         return 'false';
-    // $validator = Validator::make($req->all(), [
-    //     'name' => 'required|unique:posts|max:255',
-    //     'email' => 'required|email|unique:users',
-    //     'password'=>'required|min:6|max:100',
-    //     // 'conpas'=>'required|same:password'
-
-    // ]);
-    // if ($validator->fails()) { 
-    //         return response()->json([
-    //             "msg" => "validation fails",
-    //             "error"=>$validator->errors() 
-    //         ], 400);
-    // }
-    // else return "wow";
+    
     }
     function login(Request $request){
         $user=User::where('email',$request->email)->first();
