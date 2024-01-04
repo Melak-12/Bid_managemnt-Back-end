@@ -13,28 +13,28 @@ class ItemControler extends Controller
             $item = new Item();
             $item->itemTitle = $req->input('itemTitle');
             $item->itemDisc = $req->input('itemDisc');
+            $item->itemImage = $req->file('itemImage')->store('products');
             $item->itemDuration = $req->input('itemDuration');
             $item->itemStartPrice = $req->input('itemStartPrice');
             $item->currentWinner = $req->input('currentWinner');
     
-            error_log("this is item title".' '.$item->itemTitle);
+            error_log("This is item title: " . $item->itemTitle);
+            error_log("This is item image: " . $item->itemImage);
     
-            error_log("items before save".' '.print_r($item->toArray(), true));
+            error_log("Items before save: " . print_r($item->toArray(), true));
     
+            // Save the item
             $item->save();
     
-            error_log("items after save".' '.$item);
-            error_log("items on save ".' '.$item->save());
+            // Fetch and log the stored item after save
+            $storedItem = Item::find($item->id);
+            error_log("Stored Item: " . print_r($storedItem->toArray(), true));
     
             return $item;
         } catch (\Exception $e) {
-            // Log or handle the exception
-            error_log("Exception: " . $e->getMessage()); // Log full exception message
-            // error_log("Trace: " . $e->getTraceAsString()); // Log full stack trace for more details
-            // return response()->json(['error' => 'Failed to save item'], 500);
+            error_log("Exception: " . $e->getMessage());
+            return response()->json(['error' => 'Failed to save item. Check logs for details.'], 500);
         }
-        
-        
     }
     
     function list(){
